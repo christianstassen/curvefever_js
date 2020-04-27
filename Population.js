@@ -101,7 +101,6 @@ getAvgFitnessSum() {
   }
 
   //kill the bottom half of each this.species
-  //kill the bottom half of each this.species
   cullSpecies() {
     for (var s of this.species) {
       s.cull(); //kill bottom half
@@ -118,7 +117,7 @@ getAvgFitnessSum() {
   summary() {
     console.log('There are ', this.species.length, ' species')
     for (let i=0; i<this.species.length; i++) {
-      console.log('Species', i, ' has ', this.species[i].players.length, ' players')
+      console.log('Species', i, ' has ', this.species[i].players.length, ' players', 'avgFitness', this.getAvgFitnessSum())
     }
   }
 

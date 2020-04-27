@@ -9,7 +9,7 @@ function setup() {
 
   window.canvas = createCanvas(500, 500);
 
-  var population_size = 500;
+  var population_size = 10;
   population = new Population(population_size)
   myGameArea.start();
 
