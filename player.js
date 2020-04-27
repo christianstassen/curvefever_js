@@ -8,7 +8,7 @@ class player {
     this.height = 5
     this.width = 5
     this.dir = 270
-    this.controls;
+    this.controls = {'left':'ArrowLeft', 'right':'ArrowRight'}
     this.dirspeed = 2
     this.speed = 1.
     this.track = [{x:this.x, y:this.y, width:this.width, height:this.height}]

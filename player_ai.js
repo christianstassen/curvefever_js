@@ -36,18 +36,21 @@ class player_ai extends player {
         ctx = myGameArea.context;
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
-        this.newDir();
-        this.newPos();
-        this.collision();
-        this.addTrack();
-
-        // enemies visible to the ai
-        this.enemies        = myGameArea.border.bounds.concat(this.track.slice(0,-5));
+        if (this.alive) { // Those things only need updateding if the player is alive
+          this.newDir();
+          this.newPos();
+          this.collision();
+          this.addTrack();
+          // enemies visible to the ai
+          this.enemies        = myGameArea.border.bounds.concat(this.track.slice(0,-5));
+          this.vision();
+          this.think();
+          this.check_alive();
+        }
 
         this.drawTrack(ctx);
-        this.check_alive();
-        this.vision();
-        this.think();
+
+
     }
 
     newDir() {
@@ -67,24 +70,30 @@ class player_ai extends player {
 
 
       // //dir-specAngle/2
-      // var x0 = this.x+this.specLen*Math.sin(deg2rad(dir-this.specAngleRange/2));
-      // var y0 = this.y+this.specLen*Math.cos(deg2rad(dir-this.specAngleRange/2));
-      // //dir
-      // var x1 = this.x+this.specLen*Math.sin(deg2rad(dir));
-      // var y1 = this.y+this.specLen*Math.cos(deg2rad(dir));
-      // //dir+specAngle/2
-      // var x2 = this.x+this.specLen*Math.sin(deg2rad(dir+this.specAngleRange/2));
-      // var y2 = this.y+this.specLen*Math.cos(deg2rad(dir+this.specAngleRange/2));
-      //
-      // var xMin = Math.min(x0,x1,x2);
-      // var xMax = Math.max(x0,x1,x2);
-      // var yMin = Math.min(y0,y1,y2);
-      // var yMax = Math.max(y0,y1,y2);
-      //
-      // var horizon = {x:xMin, y:yMin, width:xMax-xMin, height:yMax-yMin};
+      var x0 = this.x + this.specLen*Math.sin(deg2rad(dir-this.specAngleRange/2));
+      var y0 = this.y + this.specLen*Math.cos(deg2rad(dir-this.specAngleRange/2));
+      //dir
+      var x1 = this.x + this.specLen*Math.sin(deg2rad(dir));
+      var y1 = this.y + this.specLen*Math.cos(deg2rad(dir));
+      //dir+specAngle/2
+      var x2 = this.x + this.specLen*Math.sin(deg2rad(dir+this.specAngleRange/2));
+      var y2 = this.y + this.specLen*Math.cos(deg2rad(dir+this.specAngleRange/2));
 
+      var xMin = Math.min(x0,x1,x2);
+      var xMax = Math.max(x0,x1,x2);
+      var yMin = Math.min(y0,y1,y2);
+      var yMax = Math.max(y0,y1,y2);
 
-      var enemies_near = this.enemies;
+      var width=(xMax-xMin)*(1+Math.abs(Math.sin(deg2rad(convert_angle(dir)))));
+      var height = (yMax-yMin)*(1+Math.abs(Math.cos(deg2rad(convert_angle(dir)))));
+      var horizon = {x:this.x-width/2+width/2*Math.sin(deg2rad(convert_angle(dir))), y:this.y-height/2+height/2*Math.cos(deg2rad(convert_angle(dir))), width:width, height:height};
+      // ctx = myGameArea.context;
+      // ctx.beginPath();
+      // ctx.lineWidth = "6";
+      // ctx.strokeStyle = "red";
+      // ctx.rect(horizon.x, horizon.y, horizon.width, horizon.height);
+      // ctx.stroke();
+      var enemies_near = rect_collision_with_list_return_list(horizon, this.enemies);
 
 
       for (let ispecAngle=0; ispecAngle<this.nvis; ispecAngle++) {

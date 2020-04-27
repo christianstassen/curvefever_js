@@ -115,5 +115,20 @@ getAvgFitnessSum() {
     }
   }
 
+  summary() {
+    console.log('There are ', this.species.length, ' species')
+    for (let i=0; i<this.species.length; i++) {
+      console.log('Species', i, ' has ', this.species[i].players.length, ' players')
+    }
+  }
+
+  getBestPlayer() {
+    var tmp = 0;
+    for (var player of this.players) {
+      if (player.calculateFitness() > tmp) {
+        this.bestPlayer = player
+      }
+    }
+  }
 
 }

@@ -62,9 +62,10 @@ function updateGameArea() {
     if (population.allDead()) {
       population.naturalSelection();
       population.resetPlayers();
-      // myGameArea.start();
+      population.summary();
+
     }
 
-
-    population.players[0].brain.drawGenome(10,10,480,480);
+    population.getBestPlayer();
+    population.bestPlayer.brain.drawGenome(10,10,480,480);
 }
