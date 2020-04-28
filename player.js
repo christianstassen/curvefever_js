@@ -3,8 +3,8 @@ class player {
     this.id = playerID;
     playerID++;
 
-    this.x = myGameArea.canvas.width/2
-    this.y = myGameArea.canvas.height/2
+    this.x = 50+random(myGameArea.canvas.width-100)
+    this.y = 50+random(myGameArea.canvas.height-100)
     this.height = 5
     this.width = 5
     this.dir = 270

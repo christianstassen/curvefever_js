@@ -151,7 +151,7 @@ class player_ai extends player {
   }
 
   calculateFitness() {
-    return this.track.length
+    this.fitness = this.track.length
   }
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------
