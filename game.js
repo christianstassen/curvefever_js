@@ -9,7 +9,7 @@ function setup() {
 
   window.canvas = createCanvas(500, 500);
 
-  var population_size = 10;
+  var population_size = 500;
   population = new Population(population_size)
   myGameArea.start();
 
@@ -61,7 +61,7 @@ function updateGameArea() {
 
     if (population.allDead()) {
       population.naturalSelection();
-      population.resetPlayers();
+      // population.resetPlayers();
       population.summary();
 
     }

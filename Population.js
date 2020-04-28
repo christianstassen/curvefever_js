@@ -73,8 +73,6 @@ getAvgFitnessSum() {
 
       // children.push(this.species[j].champ.clone()); //add champion without any mutation
       var NoOfChildren = floor(this.species[j].averageFitness / averageSum * this.players.length) - 1; //the number of children this this.species is allowed, note -1 is because the champ is already added
-
-
       for (var i = 0; i < NoOfChildren; i++) { //get the calculated amount of children from this this.species
         children.push(this.species[j].giveMeBaby(this.innovationHistory));
       }
@@ -117,15 +115,17 @@ getAvgFitnessSum() {
   summary() {
     console.log('There are ', this.species.length, ' species')
     for (let i=0; i<this.species.length; i++) {
-      console.log('Species', i, ' has ', this.species[i].players.length, ' players', 'avgFitness', this.getAvgFitnessSum())
+      console.log('Species', i, ' has ', this.species[i].players.length, ' players', 'avgFitness', this.species[i].averageFitness)
     }
   }
 
   getBestPlayer() {
-    var tmp = 0;
+    this.calculateFitness()
+    var tmp = this.players[0].fitness;
     for (var player of this.players) {
-      if (player.calculateFitness() > tmp) {
+      if (player.fitness > tmp) {
         this.bestPlayer = player
+        tmp = player.fitness
       }
     }
   }
