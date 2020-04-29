@@ -24,7 +24,7 @@ class Competition {
 }
 
 
-function assign_competition(ngroups) {
+function assign_competition() {
 
   var randomColor=[];
 
@@ -60,7 +60,7 @@ function getEnemiesOfComp(playerID){
   }
 }
 
-function resetCompetitions(ngroups) {
+function resetCompetitions() {
   competitions = [];
   assign_competition(ngroups)
 }

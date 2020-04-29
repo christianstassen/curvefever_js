@@ -4,7 +4,9 @@ var competitions=[];
 var keysPressed = {};
 var nextConnectionNo = 1;
 var playerID = 1;
-var enemies = [];
+
+var population_size = 1000;
+var ngroups         = 200;
 
 // this is needed for the p5 library to work
 // it is always called at the beginning
@@ -34,8 +36,6 @@ var myGameArea = {
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.border  = new boundary(this.canvas.width, this.canvas.height, 5, 5, "yellow")
 
-
-        var population_size = 20;
         population  = new Population(population_size);
         assign_competition(2);
         for (var c=0; c<competitions.length; c++) {
@@ -76,7 +76,7 @@ function updateGameArea() {
     if (population.allDead()) {
       console.log(competitions)
       population.naturalSelection();
-      resetCompetitions(2);
+      resetCompetitions();
       for (var c=0; c<competitions.length; c++) {
         competitions[c].addBordersToComp()
       };
