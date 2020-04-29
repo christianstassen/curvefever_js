@@ -65,7 +65,10 @@ getAvgFitnessSum() {
   naturalSelection() {
     this.speciate()
     this.calculateFitness()
+    this.sortSpecies(); //sort the this.species to be ranked in fitness order, best first
     this.cullSpecies(); //kill off the bottom half of each this.species
+    this.killStaleSpecies(); //remove this.species which haven't improved in the last 15(ish)this.generations
+    this.killBadSpecies(); //kill this.species which are so bad that they cant reproduce
     var averageSum = this.getAvgFitnessSum();
 
     var children = [];
@@ -91,6 +94,61 @@ getAvgFitnessSum() {
 
   }
 
+  //sorts the players within a this.species and the this.species by their fitnesses
+sortSpecies() {
+    //sort the players within a this.species
+    for (var s of this.species) {
+      s.sortSpecies();
+    }
+
+    //sort the this.species by the fitness of its best player
+    //using selection sort like a loser
+    var temp = []; //new ArrayList<Species>();
+    for (var i = 0; i < this.species.length; i++) {
+      var max = 0;
+      var maxIndex = 0;
+      for (var j = 0; j < this.species.length; j++) {
+        if (this.species[j].bestFitness > max) {
+          max = this.species[j].bestFitness;
+          maxIndex = j;
+        }
+      }
+      temp.push(this.species[maxIndex]);
+      this.species.splice(maxIndex, 1);
+      // this.species.remove(maxIndex);
+      i--;
+    }
+    this.species = [];
+    arrayCopy(temp, this.species);
+
+  }
+  //------------------------------------------------------------------------------------------------------------------------------------------
+  //kills all this.species which haven't improved in 15this.generations
+killStaleSpecies() {
+    for (var i = 2; i < this.species.length; i++) {
+      if (this.species[i].staleness >= 15) {
+        // .remove(i);
+        // splice(this.species, i)
+        this.species.splice(i, 1);
+        i--;
+      }
+    }
+  }
+
+  //if a this.species sucks so much that it wont even be allocated 1 child for the nextthis.generation then kill it now
+killBadSpecies() {
+    var averageSum = this.getAvgFitnessSum();
+
+    for (var i = 1; i < this.species.length; i++) {
+      if (this.species[i].averageFitness / averageSum * this.players.length < 1) { //if wont be given a single child
+        // this.species.remove(i); //sad
+        this.species.splice(i, 1);
+
+        i--;
+      }
+    }
+  }
+
   //calculates the fitness of all of the players
   calculateFitness() {
     for (var i = 1; i < this.players.length; i++) {
@@ -113,7 +171,7 @@ getAvgFitnessSum() {
   }
 
   summary() {
-    console.log('There are ', this.species.length, ' species')
+    console.log("generation  " + this.gen + "  Number of mutations  " + this.innovationHistory.length + "  species:   " + this.species.length + "  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     for (let i=0; i<this.species.length; i++) {
       console.log('Species', i, ' has ', this.species[i].players.length, ' players', 'avgFitness', this.species[i].averageFitness)
     }

@@ -89,6 +89,45 @@ class Species {
       }
     }
 
+    //sorts the species by fitness
+  sortSpecies() {
+
+    var temp = []; // new ArrayList < Player > ();
+
+    //selection short
+    for (var i = 0; i < this.players.length; i++) {
+      var max = 0;
+      var maxIndex = 0;
+      for (var j = 0; j < this.players.length; j++) {
+        if (this.players[j].fitness > max) {
+          max = this.players[j].fitness;
+          maxIndex = j;
+        }
+      }
+      temp.push(this.players[maxIndex]);
+
+      this.players.splice(maxIndex, 1);
+      // this.players.remove(maxIndex);
+      i--;
+    }
+
+    // this.players = (ArrayList) temp.clone();
+    arrayCopy(temp, this.players);
+    if (this.players.length == 0) {
+      this.staleness = 200;
+      return;
+    }
+    //if new best player
+    if (this.players[0].fitness > this.bestFitness) {
+      this.staleness = 0;
+      this.bestFitness = this.players[0].fitness;
+      this.rep = this.players[0].brain.clone();
+      this.champ = this.players[0].cloneForReplay();
+    } else { //if no new best player
+      this.staleness++;
+    }
+  }
+
     //gets baby from the this.players in this species
     giveMeBaby(innovationHistory) {
       var baby;

@@ -88,11 +88,16 @@ class player_ai extends player {
       var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id));
 
 
+
+      var specAngle;
+      var endPoint;
+      var sight;
+      var rect;
       for (let ispecAngle=0; ispecAngle<this.nvis; ispecAngle++) {
-        var specAngle = dir - this.specAngleRange/2 + this.specAngleRes*ispecAngle;
+        specAngle = dir - this.specAngleRange/2 + this.specAngleRes*ispecAngle;
         this.detect.push(this.specLen);
-        var endPoint = new coordinates(this.x + this.specLen*Math.sin(deg2rad(specAngle)), this.y + this.specLen*Math.cos(deg2rad(specAngle)));
-        var sight = get_line(player_coord, endPoint, this.specRes);
+        endPoint = new coordinates(this.x + this.specLen*Math.sin(deg2rad(specAngle)), this.y + this.specLen*Math.cos(deg2rad(specAngle)));
+        sight = get_line(player_coord, endPoint, this.specRes);
         // for (let isight=0; isight<sight.length; isight++) {
         //   ctx = myGameArea.context;
         //   ctx.fillStyle = 'white';
@@ -102,7 +107,7 @@ class player_ai extends player {
 
         for (let isight=0; isight<sight.length; isight++){
 
-          var rect = {x:sight[isight].x, y:sight[isight].y, width:1, height:1};
+          rect = {x:sight[isight].x, y:sight[isight].y, width:1, height:1};
           if (rect_collision_with_list(rect, enemies_near)) {
             // ctx.fillStyle = 'blue'
             // ctx.fillRect(rect.x,rect.y,2,2)
