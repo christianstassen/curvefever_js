@@ -60,7 +60,6 @@ class player_ai extends player {
     vision() {
       this.detect      = [] // clear previous detection
       var dir          = this.dir-90;
-      var player_coord = new coordinates(this.x, this.y);
 
 
       // //dir-specAngle/2
@@ -88,29 +87,32 @@ class player_ai extends player {
       var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id));
 
       var specAngle;
-      var endPoint;
-      var sight;
       var rect;
+      var ddx;
+      var ddy;
+
+      // Fill detection with maximum value
       for (let ispecAngle=0; ispecAngle<this.nvis; ispecAngle++) {
-        specAngle = dir - this.specAngleRange/2 + this.specAngleRes*ispecAngle;
         this.detect.push(this.specLen);
-        endPoint = new coordinates(this.x + this.specLen*Math.sin(deg2rad(specAngle)), this.y + this.specLen*Math.cos(deg2rad(specAngle)));
-        sight = get_line(player_coord, endPoint, this.specRes);
-        for (let isight=0; isight<sight.length; isight++) {
-          ctx = myGameArea.context;
-          ctx.fillStyle = 'white';
-          ctx.fillRect(sight[isight].x, sight[isight].y, this.specWidth, this.specHeight);
-        }
+      }
 
+      // Then check if there are enemies closer
+      if (!enemies_near.length==0) { // But only if there are any enemies near
+        for (let ispecAngle=0; ispecAngle<this.nvis; ispecAngle++) {
+          specAngle = dir - this.specAngleRange/2 + this.specAngleRes*ispecAngle;
 
-        for (let isight=0; isight<sight.length; isight++){
+          ddx = this.specLen*Math.sin(deg2rad(specAngle))/this.specRes;
+          ddy = this.specLen*Math.cos(deg2rad(specAngle))/this.specRes;
 
-          rect = {x:sight[isight].x, y:sight[isight].y, width:this.specWidth, height:this.specHeight};
-          if (rect_collision_with_list(rect, enemies_near) && !rect_collision_with_list(rect, this.track.slice(this.track.length-5,this.track.length))) {
-            ctx.fillStyle = 'red'
-            ctx.fillRect(rect.x,rect.y,this.specWidth,this.specHeight)
-            this.detect[ispecAngle]= dist_2d({x:rect.x, y:rect.y},player_coord);
-            break;
+          for (let istep=0; istep<this.specRes; istep++) {
+            rect = {x:this.x+istep*ddx, y:this.y+istep*ddy, width:this.specWidth, height:this.specHeight};
+            // ctx = myGameArea.context;
+            // ctx.fillStyle = 'white';
+            // ctx.fillRect(rect.x, rect.y, this.specWidth, this.specHeight);
+            if (rect_collision_with_list(rect, enemies_near) && !rect_collision_with_list(rect, this.track.slice(this.track.length-5,this.track.length))) {
+              this.detect[ispecAngle]= dist_2d({x:rect.x, y:rect.y},{x:this.x, y:this.y});
+              break;
+            }
           }
         }
       }
@@ -177,21 +179,4 @@ function rect_collision_with_list_return_list(rect, rects) {
        }
   }
   return list
-}
-
-function get_line(coord0, coord1, nsteps) {
-  var line = []
-  var dx = coord1.x - coord0.x;
-  var dy = coord1.y - coord0.y;
-
-  ddx = dx/nsteps
-  ddy = dy/nsteps
-
-  for (let istep=0; istep<nsteps; istep++) {
-    coord = new coordinates( coord0.x+istep*ddx, coord0.y+istep*ddy )
-    line.push(coord)
-  }
-
-  return line
-
 }
