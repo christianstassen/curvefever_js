@@ -10,9 +10,11 @@ class player_ai extends player {
 
     // Information about what the player can see
     this.specAngleRange = 120;
-    this.specAngleRes   = 5;
+    this.specAngleRes   = 7;
     this.specLen        = 200;
-    this.specRes        = 50;
+    this.specRes        = 30;
+    this.specWidth      = 3;
+    this.specHeight     = 3;
 
     this.detect         = [];
     this.nvis           = Math.ceil(this.specAngleRange/this.specAngleRes);
@@ -71,14 +73,12 @@ class player_ai extends player {
       var x2 = this.x + this.specLen*Math.sin(deg2rad(dir+this.specAngleRange/2));
       var y2 = this.y + this.specLen*Math.cos(deg2rad(dir+this.specAngleRange/2));
 
-      var xMin = Math.min(x0,x1,x2);
-      var xMax = Math.max(x0,x1,x2);
-      var yMin = Math.min(y0,y1,y2);
-      var yMax = Math.max(y0,y1,y2);
+      var xMin = Math.min(this.x,x0,x1,x2);
+      var xMax = Math.max(this.x,x0,x1,x2);
+      var yMin = Math.min(this.y,y0,y1,y2);
+      var yMax = Math.max(this.y,y0,y1,y2);
 
-      var width=(xMax-xMin)*(1+Math.abs(Math.sin(deg2rad(convert_angle(dir)))));
-      var height = (yMax-yMin)*(1+Math.abs(Math.cos(deg2rad(convert_angle(dir)))));
-      var horizon = {x:this.x-width/2+width/2*Math.sin(deg2rad(convert_angle(dir))), y:this.y-height/2+height/2*Math.cos(deg2rad(convert_angle(dir))), width:width, height:height};
+      var horizon = {x:xMin, y:yMin, width:Math.abs(xMax-xMin), height:Math.abs(yMax-yMin)}
       // ctx = myGameArea.context;
       // ctx.beginPath();
       // ctx.lineWidth = "6";
@@ -86,8 +86,6 @@ class player_ai extends player {
       // ctx.rect(horizon.x, horizon.y, horizon.width, horizon.height);
       // ctx.stroke();
       var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id));
-
-
 
       var specAngle;
       var endPoint;
@@ -98,19 +96,19 @@ class player_ai extends player {
         this.detect.push(this.specLen);
         endPoint = new coordinates(this.x + this.specLen*Math.sin(deg2rad(specAngle)), this.y + this.specLen*Math.cos(deg2rad(specAngle)));
         sight = get_line(player_coord, endPoint, this.specRes);
-        // for (let isight=0; isight<sight.length; isight++) {
-        //   ctx = myGameArea.context;
-        //   ctx.fillStyle = 'white';
-        //   ctx.fillRect(sight[isight].x, sight[isight].y, 1, 1);
-        // }
+        for (let isight=0; isight<sight.length; isight++) {
+          ctx = myGameArea.context;
+          ctx.fillStyle = 'white';
+          ctx.fillRect(sight[isight].x, sight[isight].y, this.specWidth, this.specHeight);
+        }
 
 
         for (let isight=0; isight<sight.length; isight++){
 
-          rect = {x:sight[isight].x, y:sight[isight].y, width:1, height:1};
-          if (rect_collision_with_list(rect, enemies_near)) {
-            // ctx.fillStyle = 'blue'
-            // ctx.fillRect(rect.x,rect.y,2,2)
+          rect = {x:sight[isight].x, y:sight[isight].y, width:this.specWidth, height:this.specHeight};
+          if (rect_collision_with_list(rect, enemies_near) && !rect_collision_with_list(rect, this.track.slice(this.track.length-5,this.track.length))) {
+            ctx.fillStyle = 'red'
+            ctx.fillRect(rect.x,rect.y,this.specWidth,this.specHeight)
             this.detect[ispecAngle]= dist_2d({x:rect.x, y:rect.y},player_coord);
             break;
           }
