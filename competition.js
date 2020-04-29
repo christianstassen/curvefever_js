@@ -26,9 +26,12 @@ class Competition {
 
 function assign_competition(ngroups) {
 
+  var randomColor=[];
+
   // Create an empty competition list first
   for (let i=0; i<ngroups; i++){
     competitions.push(new Competition);
+    randomColor.push(Math.floor(Math.random()*16777215).toString(16));
   }
 
   // Sort the players into competition groups
@@ -43,6 +46,7 @@ function assign_competition(ngroups) {
       }
     }
     competitions[randGroup-1].players.push(player);
+    player.color='#'.concat(randomColor[randGroup-1]);
   }
 };
 

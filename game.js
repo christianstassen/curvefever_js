@@ -74,8 +74,12 @@ function updateGameArea() {
 
 
     if (population.allDead()) {
+      console.log(competitions)
       population.naturalSelection();
       resetCompetitions(2);
+      for (var c=0; c<competitions.length; c++) {
+        competitions[c].addBordersToComp()
+      };
       population.summary();
 
     }
