@@ -111,8 +111,9 @@ class player {
     }
 }
 
-function rect_collision_with_list(rect, rects) {
-  for (let step = 0; step < rects.length; step+=1){
+function rect_collision_with_list(rect, rects, resolution) {
+  if (!resolution) {resolution=1}
+  for (let step = 0; step < rects.length; step+=resolution){
     if (rect.x < rects[step].x + rects[step].width &&
        rect.x + rect.width > rects[step].x &&
        rect.y < rects[step].y + rects[step].height &&

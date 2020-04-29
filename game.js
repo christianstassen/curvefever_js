@@ -5,8 +5,8 @@ var keysPressed = {};
 var nextConnectionNo = 1;
 var playerID = 1;
 
-var population_size = 2;
-var ngroups         = 1;
+var population_size = 1000;
+var ngroups         = 200;
 
 var draw_all          = false;
 var draw_comp_of_best = true;
@@ -40,7 +40,7 @@ var myGameArea = {
         this.border  = new boundary(this.canvas.width, this.canvas.height, 5, 5, "yellow")
 
         population  = new Population(population_size);
-        assign_competition(2);
+        assign_competition();
         for (var c=0; c<competitions.length; c++) {
           competitions[c].addBordersToComp()
         };
@@ -76,7 +76,6 @@ function updateGameArea() {
     }
 
     if (population.allDead()) {
-      console.log(competitions)
       population.naturalSelection();
       resetCompetitions();
       for (var c=0; c<competitions.length; c++) {

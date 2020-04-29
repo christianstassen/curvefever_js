@@ -109,7 +109,9 @@ class player_ai extends player {
             // ctx = myGameArea.context;
             // ctx.fillStyle = 'white';
             // ctx.fillRect(rect.x, rect.y, this.specWidth, this.specHeight);
-            if (rect_collision_with_list(rect, enemies_near) && !rect_collision_with_list(rect, this.track.slice(this.track.length-5,this.track.length))) {
+
+            // Only checks every third enemy rectangle for collision (much faster)
+            if (rect_collision_with_list(rect, enemies_near,3) && !rect_collision_with_list(rect, this.track.slice(this.track.length-5,this.track.length))) {
               this.detect[ispecAngle]= dist_2d({x:rect.x, y:rect.y},{x:this.x, y:this.y});
               break;
             }
