@@ -24,14 +24,10 @@ class player {
 
 
   update() {
-        ctx = myGameArea.context;
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
         this.newDir()
         this.newPos()
         this.collision()
         this.addTrack()
-        this.drawTrack(ctx)
         this.check_alive()
     }
 
@@ -69,7 +65,13 @@ class player {
       }
     }
 
+    drawPlayer(ctx) {
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
   drawTrack(ctx) {
+      ctx.fillStyle = this.color
       for (let step = 0; step < this.track.length; step++){
         ctx.fillRect(this.track[step].x, this.track[step].y, this.track[step].width, this.track[step].height);
       }

@@ -8,6 +8,9 @@ var playerID = 1;
 var population_size = 1000;
 var ngroups         = 200;
 
+var draw_all          = false;
+var draw_comp_of_best = true;
+
 // this is needed for the p5 library to work
 // it is always called at the beginning
 function setup() {
@@ -72,7 +75,6 @@ function updateGameArea() {
       competition.addEnemyTracksOfComp();
     }
 
-
     if (population.allDead()) {
       console.log(competitions)
       population.naturalSelection();
@@ -86,4 +88,32 @@ function updateGameArea() {
 
     population.getBestPlayer();
     population.bestPlayer.brain.drawGenome(10,10,480,480);
+
+    if (draw_all) {
+      draw_all_players();
+    }
+    if (draw_comp_of_best) {
+      draw_comp_of_bestplayer();
+    }
+}
+
+
+function draw_all_players() {
+  for (var player of population.players) {
+    player.drawPlayer(myGameArea.context);
+    player.drawTrack(myGameArea.context);
+  }
+}
+
+function draw_comp_of_bestplayer() {
+  for (var c=0; c<competitions.length; c++) { // Go through all competitions
+    for (var p of competitions[c].players){ // Go through all players of this competition
+      if (population.bestPlayer.id == p.id) { //Check if best player is in this competition
+        for (var player of competitions[c].players) { // Then go through all players of this competition and draw them
+          player.drawPlayer(myGameArea.context);
+          player.drawTrack(myGameArea.context);
+        }
+      }
+    }
+  }
 }

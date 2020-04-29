@@ -33,9 +33,6 @@ class player_ai extends player {
   }
 
   update() {
-        ctx = myGameArea.context;
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
         if (this.alive) { // Those things only need updateding if the player is alive
           this.newDir();
           this.newPos();
@@ -45,8 +42,6 @@ class player_ai extends player {
           this.think();
           this.check_alive();
         }
-
-        this.drawTrack(ctx);
 
     }
 
