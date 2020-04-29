@@ -122,7 +122,6 @@ class Species {
       this.staleness = 0;
       this.bestFitness = this.players[0].fitness;
       this.rep = this.players[0].brain.clone();
-      this.champ = this.players[0].cloneForReplay();
     } else { //if no new best player
       this.staleness++;
     }
