@@ -89,7 +89,7 @@ class player {
       // ctx.stroke();
 
       // Find enemies within the horizon
-      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id));
+      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id), 1);
 
       var rect = {x:this.x, y:this.y, width:this.width, height:this.height}
       var collisions = rect_collision_with_list_return_list(rect, enemies_near); // Check for any collisions

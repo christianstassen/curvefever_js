@@ -6,7 +6,7 @@ var nextConnectionNo = 1;
 var playerID = 1;
 
 var population_size = 1000;
-var ngroups         = 200;
+var ngroups         = 125;
 
 var draw_all          = false;
 var draw_comp_of_best = true;

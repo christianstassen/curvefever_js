@@ -84,7 +84,9 @@ class player_ai extends player {
       // ctx.strokeStyle = "red";
       // ctx.rect(horizon.x, horizon.y, horizon.width, horizon.height);
       // ctx.stroke();
-      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id));
+
+      // Only checks every thirtieth rectangle for collision (faster hopefully)
+      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id), 30);
 
       var specAngle;
       var rect;
@@ -110,8 +112,8 @@ class player_ai extends player {
             // ctx.fillStyle = 'white';
             // ctx.fillRect(rect.x, rect.y, this.specWidth, this.specHeight);
 
-            // Only checks every third enemy rectangle for collision (much faster)
-            if (rect_collision_with_list(rect, enemies_near,3) && !rect_collision_with_list(rect, this.track.slice(this.track.length-5,this.track.length))) {
+            // checks every rectangle for collision
+            if (rect_collision_with_list(rect, enemies_near,1) && !rect_collision_with_list(rect, this.track.slice(this.track.length-5,this.track.length))) {
               this.detect[ispecAngle]= dist_2d({x:rect.x, y:rect.y},{x:this.x, y:this.y});
               break;
             }
@@ -170,9 +172,10 @@ function dist_2d(coord0, coord1) {
 }
 
 
-function rect_collision_with_list_return_list(rect, rects) {
+function rect_collision_with_list_return_list(rect, rects, resolution) {
+  if (!resolution) {resolution=1}
   var list = []
-  for (let step = 0; step < rects.length; step+=1){
+  for (let step = 0; step < rects.length; step+=resolution){
     if (rect.x < rects[step].x + rects[step].width &&
        rect.x + rect.width > rects[step].x &&
        rect.y < rects[step].y + rects[step].height &&
