@@ -1,17 +1,18 @@
 
 var population = {};
+var competitions=[];
 var keysPressed = {};
 var nextConnectionNo = 1;
 var playerID = 1;
+var enemies = [];
 
 // this is needed for the p5 library to work
+// it is always called at the beginning
 function setup() {
 
   window.canvas = createCanvas(500, 500);
 
-  var population_size = 500;
-  population = new Population(population_size)
-  myGameArea.start();
+  // myGameArea.start();
 
 }
 
@@ -32,6 +33,14 @@ var myGameArea = {
         this.context.fillStyle = "black";
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.border  = new boundary(this.canvas.width, this.canvas.height, 5, 5, "yellow")
+
+
+        var population_size = 20;
+        population  = new Population(population_size);
+        assign_competition(2);
+        for (var c=0; c<competitions.length; c++) {
+          competitions[c].addBordersToComp()
+        };
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
     },
@@ -54,14 +63,19 @@ function updateGameArea() {
     myGameArea.clear();
     myGameArea.border.draw();
 
+    // console.log(enemies)
     const vplayerList = Object.values(population.players)
     for (vplayer of vplayerList) {
       vplayer.update();
     }
+    for (competition of competitions){
+      competition.addEnemyTracksOfComp();
+    }
+
 
     if (population.allDead()) {
       population.naturalSelection();
-      // population.resetPlayers();
+      resetCompetitions(2);
       population.summary();
 
     }

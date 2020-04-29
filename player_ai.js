@@ -41,15 +41,12 @@ class player_ai extends player {
           this.newPos();
           this.collision();
           this.addTrack();
-          // enemies visible to the ai
-          this.enemies        = myGameArea.border.bounds.concat(this.track.slice(0,-5));
           this.vision();
           this.think();
           this.check_alive();
         }
 
         this.drawTrack(ctx);
-
 
     }
 
@@ -93,7 +90,7 @@ class player_ai extends player {
       // ctx.strokeStyle = "red";
       // ctx.rect(horizon.x, horizon.y, horizon.width, horizon.height);
       // ctx.stroke();
-      var enemies_near = rect_collision_with_list_return_list(horizon, this.enemies);
+      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id));
 
 
       for (let ispecAngle=0; ispecAngle<this.nvis; ispecAngle++) {

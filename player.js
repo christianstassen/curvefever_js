@@ -49,19 +49,23 @@ class player {
     }
 
   addTrack() {
-      if (!this.l_gap && this.track.length % Math.ceil(300/this.track_resolution) == 0) {this.l_gap = true};
+      if (!this.l_gap && this.track.length % Math.ceil(300/this.track_resolution) == 0) {this.l_gap = true; };
       if (this.l_gap && this.gap_counter < this.gap_length) {
-        this.gap_counter+=this.track_resolution
+        this.gap_counter+=this.track_resolution;
+
       } else {
         this.l_gap=false
         this.gap_counter = 0
+
       }
 
       if (!(this.l_gap) && this.track_count%this.track_resolution==0) {
         this.track.push({x:this.x, y:this.y, width:this.width, height:this.height});
-        this.track_count=1
+        this.track_count=1;
+
       } else {
-        this.track_count++
+        this.track_count++;
+
       }
     }
 
@@ -72,21 +76,27 @@ class player {
     }
 
   collision() {
-      if (this.track.length > this.nocollen && !this.l_gap) {
-        var rect = {x:this.x, y:this.y, width:this.width, height:this.height}
 
-        if ( rect_collision_with_list(rect, this.track.slice(0,-this.nocollen)) ) {
-          this.alive = false
-        }
+      // You only have to check this area for a collision
+      var horizon      = {x:this.x-this.width*10/2, y:this.y-this.height*10/2, width:this.width*10, height:this.height*10}
+      // ctx = myGameArea.context;
+      // ctx.beginPath();
+      // ctx.lineWidth = "6";
+      // ctx.strokeStyle = "red";
+      // ctx.rect(horizon.x, horizon.y, horizon.width, horizon.height);
+      // ctx.stroke();
 
-        // const vplayerList = Object.values(playerList)
-        // for (vplayer of vplayerList) {
-        //   if ( vplayer.id !== this.id && rect_collision_with_list(rect, vplayer.track) ) {
-        //     this.alive = false
-        //   }
-        // }
+      // Find enemies within the horizon
+      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id));
 
-        if ( rect_collision_with_list(rect, myGameArea.border.bounds)) {
+      var rect = {x:this.x, y:this.y, width:this.width, height:this.height}
+      var collisions = rect_collision_with_list_return_list(rect, enemies_near); // Check for any collisions
+
+      var nocol      = this.track.slice(this.track.length-10,this.track.length) // Define a no collision zone with your own track
+
+      // Check if there are collisions outside the no collision zone
+      for (var col of collisions) {
+        if ( !rect_collision_with_list(col, nocol) ) {
           this.alive = false
         }
       }
