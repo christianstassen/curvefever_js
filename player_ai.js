@@ -11,10 +11,10 @@ class player_ai extends player {
     // Information about what the player can see
     this.specAngleRange = 120;
     this.specAngleRes   = 7;
-    this.specLen        = 200;
-    this.specRes        = 30;
-    this.specWidth      = 3;
-    this.specHeight     = 3;
+    this.specLen        = 300;
+    this.specWidth      = 4;
+    this.specHeight     = 4;
+    this.specRes        = Math.ceil( this.specLen / ( Math.sqrt( Math.pow(this.specWidth,2) + Math.pow(this.specHeight,2) ) ) ); // This ensures no gaps in the sight
 
     this.detect         = [];
     this.nvis           = Math.ceil(this.specAngleRange/this.specAngleRes);
@@ -88,8 +88,7 @@ class player_ai extends player {
       // ctx.rect(horizon.x, horizon.y, horizon.width, horizon.height);
       // ctx.stroke();
 
-      // Only checks every thirtieth rectangle for collision (faster hopefully)
-      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id), 30);
+      var enemies_near = rect_collision_with_list_return_list(horizon, getEnemiesOfComp(this.id), 1);
 
       var specAngle;
       var rect;

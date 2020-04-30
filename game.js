@@ -72,15 +72,12 @@ function updateGameArea() {
       vplayer.update();
     }
     for (competition of competitions){
-      competition.addEnemyTracksOfComp();
+      competition.update();
     }
 
     if (population.allDead()) {
       population.naturalSelection();
       resetCompetitions();
-      for (var c=0; c<competitions.length; c++) {
-        competitions[c].addBordersToComp()
-      };
       population.summary();
 
     }

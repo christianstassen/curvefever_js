@@ -21,6 +21,12 @@ class Competition {
         this.addEnemy(b)
       };
     }
+
+    update() {
+      this.enemies = []; // Empty enemy list otherwise track gets added over and over again
+      this.addEnemyTracksOfComp();
+      this.addBordersToComp();
+    }
 }
 
 
