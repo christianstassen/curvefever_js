@@ -113,6 +113,55 @@ class Genome {
     return false;
   }
 
+  //mutate the NN by adding a new node
+  //it does this by picking a random connection and disabling it then 2 new connections are added
+  //1 between the input node of the disabled connection and the new node
+  //and the other between the new node and the output of the disabled connection
+addNode(innovationHistory) {
+  //pick a random connection to create a node between
+  if (this.connectgenes.length == 0) {
+    this.addConnection(innovationHistory);
+    return;
+  }
+  var randomConnection = floor(random(this.connectgenes.length));
+
+  while (this.connectgenes[randomConnection].fromNode == this.nodes[this.biasNode] && this.connectgenes.length != 1) { //dont disconnect bias
+    randomConnection = floor(random(this.connectgenes.length));
+  }
+
+  this.connectgenes[randomConnection].enabled = false; //disable it
+
+  var newNodeNo = this.nextNode;
+  this.nodes.push(new Node(newNodeNo));
+  this.nextNode++;
+  //add a new connection to the new node with a weight of 1
+  var connectionInnovationNumber = this.getInnovationNumber(innovationHistory, this.connectgenes[randomConnection].fromNode, this.getNode(newNodeNo));
+  this.connectgenes.push(new connectionGene(this.connectgenes[randomConnection].fromNode, this.getNode(newNodeNo), 1, connectionInnovationNumber));
+
+
+  connectionInnovationNumber = this.getInnovationNumber(innovationHistory, this.getNode(newNodeNo), this.connectgenes[randomConnection].toNode);
+  //add a new connection from the new node with a weight the same as the disabled connection
+  this.connectgenes.push(new connectionGene(this.getNode(newNodeNo), this.connectgenes[randomConnection].toNode, this.connectgenes[randomConnection].weight, connectionInnovationNumber));
+  this.getNode(newNodeNo).layer = this.connectgenes[randomConnection].fromNode.layer + 1;
+
+
+  connectionInnovationNumber = this.getInnovationNumber(innovationHistory, this.nodes[this.biasNode], this.getNode(newNodeNo));
+  //connect the bias to the new node with a weight of 0
+  this.connectgenes.push(new connectionGene(this.nodes[this.biasNode], this.getNode(newNodeNo), 0, connectionInnovationNumber));
+
+  //if the layer of the new node is equal to the layer of the output node of the old connection then a new layer needs to be created
+  //more accurately the layer numbers of all layers equal to or greater than this new node need to be incrimented
+  if (this.getNode(newNodeNo).layer == this.connectgenes[randomConnection].toNode.layer) {
+    for (var i = 0; i < this.nodes.length - 1; i++) { //dont include this newest node
+      if (this.nodes[i].layer >= this.getNode(newNodeNo).layer) {
+        this.nodes[i].layer++;
+      }
+    }
+    this.layers++;
+  }
+  this.connectNodes();
+}
+
   feedForward(inputValues) {
     // the output of the input nodes is the input itself
     for (let i=0; i<this.inputs; i++) {
@@ -172,11 +221,11 @@ class Genome {
       this.addConnection(innovationHistory);
     }
 
-    // //1% of the time add a node
-    // var rand3 = random(1);
-    // if (rand3 < 0.01) {
-    //   this.addNode(innovationHistory);
-    // }
+    //1% of the time add a node
+    var rand3 = random(1);
+    if (rand3 < 0.01) {
+      this.addNode(innovationHistory);
+    }
   }
 
   //returns the innovation number for the new mutation
@@ -314,6 +363,9 @@ class Genome {
 // Taken from code bullet git website!
   //draw the genome on the screen
   drawGenome(startX, startY, w, h) {
+    // Clear canvas
+    clear();
+
     //i know its ugly but it works (and is not that important) so I'm not going to mess with it
     var allNodes = []; //new ArrayList<ArrayList<Node>>();
     var nodePoses = []; // new ArrayList<PVector>();
@@ -379,23 +431,6 @@ class Genome {
       text(nodeNumbers[i], nodePoses[i].x, nodePoses[i].y);
 
     }
-
-    // print out neural network info text
-    // textAlign(RIGHT);
-    // fill(255);
-    // textSize(15);
-    // noStroke();
-    // text("car angle", nodePoses[0].x - 20, nodePoses[0].y);
-    // text("touching ground", nodePoses[1].x - 20, nodePoses[1].y);
-    // text("angular velocity", nodePoses[2].x - 20, nodePoses[2].y);
-    // text("Distance to ground", nodePoses[3].x - 20, nodePoses[3].y);
-    // text("gradient", nodePoses[4].x - 20, nodePoses[4].y);
-    // text("bias", nodePoses[5].x - 20, nodePoses[5].y);
-    // textAlign(LEFT);
-    // text("gas", nodePoses[nodePoses.length - 2].x + 20, nodePoses[nodePoses.length - 2].y);
-    // text("break", nodePoses[nodePoses.length - 1].x + 20, nodePoses[nodePoses.length - 1].y);
-
-
 
   }
 
