@@ -37,6 +37,9 @@ class player {
         if (key == this.controls.left) {this.dir += this.dirspeed;}
         if (key == this.controls.right) {this.dir += -this.dirspeed; }
       } ;
+      if (this.dir > 360 || this.dir < 0) {
+        this.dir = this.dir%360
+      }
     }
 
   newPos() {
