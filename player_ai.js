@@ -43,8 +43,10 @@ class player_ai extends player {
           this.vision();
           this.think();
           this.check_alive();
+          if (!this.alive) {
+            this.get_points()
+          }
         }
-
     }
 
     newDir() {
@@ -154,7 +156,14 @@ class player_ai extends player {
   }
 
   calculateFitness() {
-    this.fitness = this.track.length
+    // The longer you live the better
+    this.fitness = this.track.length / 100;
+    // console.log('track length points ', this.track.length / 100)
+
+    // Every enemy killed before you
+    this.fitness += this.points
+
+
   }
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------

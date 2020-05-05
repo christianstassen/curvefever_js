@@ -20,15 +20,21 @@ class player {
     this.gap_length = 18
     this.color = "red"
     this.alive = true
+    this.points = 0;
   }
 
 
   update() {
+      if (this.alive) { // Those things only need updateding if the player is alive
         this.newDir()
         this.newPos()
         this.collision()
         this.addTrack()
         this.check_alive()
+        if (!this.alive) {
+          this.get_points()
+        }
+      }
     }
 
   newDir() {
@@ -41,6 +47,21 @@ class player {
         this.dir = this.dir%360
       }
     }
+
+  get_points() {
+    for (var c of competitions) { // Go through competitions
+      for (var p of c.players) { // Go through the players of this competition
+        if (p.id == this.id) { // Find the competition this player belongs to
+          for (var p2 of c.players){ // Go through all players of your competition
+            if (!p2.alive && p2.id != this.id) {// For each dead player you get a point (not yourself)
+              this.points += 1
+            }
+          }
+        }
+      }
+    }
+    console.log(this.points)
+  }
 
   newPos() {
       this.x += this.speed * Math.sin(deg2rad(convert_angle(this.dir-90)));

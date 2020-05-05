@@ -6,8 +6,8 @@ var keysPressed = {};
 var nextConnectionNo = 1;
 var playerID = 1;
 
-var population_size = 1000;
-var ngroups         = 125;
+var population_size = 5;
+var ngroups         = 1;
 
 var draw_all          = false;
 var draw_comp_of_best = true;
@@ -85,7 +85,7 @@ function updateGameArea() {
 
     population.getBestPlayer();
     population.bestPlayer.brain.drawGenome(10,10,480,480);
-    
+
 
     if (draw_all) {
       draw_all_players();
