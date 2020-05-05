@@ -60,7 +60,6 @@ class player {
         }
       }
     }
-    console.log(this.points)
   }
 
   newPos() {
