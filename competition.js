@@ -42,18 +42,30 @@ function assign_competition() {
 
   // Sort the players into competition groups
   for (player of population.players){
-    var randGroup = Math.ceil(random(ngroups));
+    var randGroup = Math.floor(random(ngroups));
 
     //Make sure not one group is too big
-    while (competitions[randGroup-1].players.length > Math.ceil(population.players.length / ngroups)) {
-      randGroup++;
-      if (randGroup>=ngroups+1) {
-        randGroup=1
+    if (competitions[randGroup].players.length >= Math.floor(population_size / ngroups)) {
+      for (let i=0; i<competitions.length; i++) {
+        if (competitions[i].players.length < Math.floor(population_size / ngroups)) {
+          randGroup = i;
+          break
+        }
       }
     }
-    competitions[randGroup-1].players.push(player);
-    player.color='#'.concat(randomColor[randGroup-1]);
+
+    // //Make sure not one group is too big
+    // while (competitions[randGroup].players.length >= Math.floor(population_size / ngroups)) {
+    //   randGroup++;
+    //   if (randGroup>ngroups) {
+    //     randGroup=0
+    //   }
+    // }
+
+    competitions[randGroup].players.push(player);
+    player.color='#'.concat(randomColor[randGroup]);
   }
+
 };
 
 function getEnemiesOfComp(playerID){

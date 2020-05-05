@@ -29,7 +29,10 @@ class player_ai extends player {
     this.score    = 0;
     this.gen      = 0;
 
-    this.genomeInputs  = this.nvis;
+    var nenemies = Math.floor(population_size / ngroups) - 1 // enemies in group not yourself
+
+
+    this.genomeInputs  = this.nvis+4*nenemies; //vislines + x,y,dir,speed for each enemy
     this.genomeOutputs = 1;
     this.brain         = new Genome(this.genomeInputs, this.genomeOutputs)
   }
@@ -124,6 +127,22 @@ class player_ai extends player {
           }
         }
       }
+
+      for (var c of competitions) { // Go through competitions
+        for (var p of c.players) { // Go through the players of this competition
+          if (p.id == this.id) { // Find the competition this player belongs to
+            for (var p2 of c.players){ // Go through all players of your competition
+              if (p2.id != this.id) {// get enemy playr info to detect
+                this.detect.push(p2.x)
+                this.detect.push(p2.y)
+                this.detect.push(p2.dir)
+                this.detect.push(p2.speed)
+              }
+            }
+          }
+        }
+      }
+
     }
 
 
@@ -157,8 +176,8 @@ class player_ai extends player {
 
   calculateFitness() {
     // The longer you live the better
-    this.fitness = this.track.length / 100;
-    // console.log('track length points ', this.track.length / 100)
+    this.fitness = this.track.length / 500;
+    // console.log('track length points ', this.track.length / 500)
 
     // Every enemy killed before you
     this.fitness += this.points
