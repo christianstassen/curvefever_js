@@ -431,7 +431,6 @@ addNode(innovationHistory) {
       text(nodeNumbers[i], nodePoses[i].x, nodePoses[i].y);
 
     }
-
   }
 
 

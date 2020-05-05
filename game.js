@@ -1,5 +1,6 @@
 
 var population = {};
+var speciesID = 1;
 var competitions=[];
 var keysPressed = {};
 var nextConnectionNo = 1;
@@ -84,6 +85,7 @@ function updateGameArea() {
 
     population.getBestPlayer();
     population.bestPlayer.brain.drawGenome(10,10,480,480);
+    
 
     if (draw_all) {
       draw_all_players();

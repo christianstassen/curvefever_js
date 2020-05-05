@@ -173,7 +173,7 @@ killBadSpecies() {
   summary() {
     console.log("generation  " + this.gen + "  Number of mutations  " + this.innovationHistory.length + "  species:   " + this.species.length + "  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     for (let i=0; i<this.species.length; i++) {
-      console.log('Species', i, ' has ', this.species[i].players.length, ' players', 'avgFitness', this.species[i].averageFitness, 'staleness:', this.species[i].staleness)
+      console.log('Species', this.species[i].id, ' has ', this.species[i].players.length, ' players', 'avgFitness', this.species[i].averageFitness, 'staleness:', this.species[i].staleness)
     }
   }
 

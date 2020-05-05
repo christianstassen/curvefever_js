@@ -1,5 +1,6 @@
 class Species {
   constructor(p) { // p for player
+    this.id      = speciesID; speciesID++;
     this.players = []; // players that belong to this species
     this.bestFitness = 0; // best fitness of this species
     this.champ; // the best player of this species
